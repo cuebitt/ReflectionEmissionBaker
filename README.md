@@ -2,7 +2,9 @@
 
 Lit avatar props reflecting off of an avatar is a fun effect, but realtime lights are expensive and are usually blocked by other players. This package allows you to "bake" an emission map that replicates this effect with no realtime lights!
 
-The package id is `rip.cuebitt.reflectionemissionbaker`.
+<img width="960" height="540" alt="preview" src="https://github.com/user-attachments/assets/a66266b1-6443-45f6-abdb-6eb5800acfec" />
+
+There are no realtime lights being used in this clip!
 
 ## How it works
 
@@ -40,12 +42,6 @@ Releases publish a VPM listing from this repo, so install and updates flow throu
 7. Press Bake Emission Mask and plug the PNG into your material's Emission Mask slot.
 
 A sample glowstick prop ships in `Runtime/Glowsticks/`: mesh, BaseColor, Normal, MetallicSmoothness and Emission textures, plus a Poiyomi `Glowstick.mat` wired to use a baked mask.
-
-## Package contents
-
-- `Editor/ReflectionEmissionBaker.cs`: window UI, preview lights, scene gizmos.
-- `Editor/ReflectionEmissionBaker.Baking.cs`: rasterize, lighting, dilate, PNG export.
-- `Runtime/Glowsticks/`: sample glowstick prop.
 
 ## License
 
