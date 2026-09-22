@@ -2,6 +2,12 @@
   "dependencies": {
     "com.vrchat.avatars": {
       "version": "3.10.5"
+    },
+    "com.poiyomi.toon": {
+      "version": "10.0.22"
+    },
+    "com.llealloo.audiolink": {
+      "version": "3.1.2"
     }
   },
   "locked": {
@@ -14,6 +20,20 @@
       "dependencies": {
         "com.vrchat.base": "3.10.5"
       }
+    },
+    "com.poiyomi.toon": {
+      "version": "10.0.22",
+      "dependencies": {
+        "com.poiyomi.thryeditor": ">=2.74.0"
+      }
+    },
+    "com.llealloo.audiolink": {
+      "version": "3.1.2",
+      "dependencies": {}
+    },
+    "com.poiyomi.thryeditor": {
+      "version": "2.74.2",
+      "dependencies": {}
     }
   }
 }

@@ -63,3 +63,13 @@ crashlytics-build.properties
 Assets/PackageMakerWindowData.asset*
 .idea
 .vscode
+
+Poi/
+Thry/
+.audiolink_pipeline
+
+Assets/GeneratedTextures/
+Assets/GeneratedTextures.meta
+
+Assets/_LockedShaderCache/
+Assets/_LockedShaderCache.meta

@@ -2,7 +2,7 @@
 !com.vrchat.core.*
 
 # This package's name
-!com.vrchat.demo-template 
+!rip.cuebitt.reflectionemissionbaker
 
 # Resolver binary re-downloads via bootstrap on fresh clones - don't commit it
 com.vrchat.core.vpm-resolver/

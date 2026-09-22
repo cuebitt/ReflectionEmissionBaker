@@ -1,0 +1,17 @@
+{
+  "name": "rip.cuebitt.reflectionemissionbaker",
+  "displayName": "Reflection Emission Baker",
+  "version": "1.0.0",
+  "description": "Describe this Package",
+  "gitDependencies": {},
+  "vpmDependencies": {
+    "com.vrchat.avatars": "3.10.5"
+  },
+  "author": {
+    "name": "Cuebitt",
+    "email": "cuebitt.vrc@icloud.com",
+    "url": "http://cuebitt.rip"
+  },
+  "legacyFolders": {},
+  "legacyFiles": {}
+}

@@ -1,5 +1,23 @@
 {
   "dependencies": {
+    "com.llealloo.audiolink": {
+      "version": "file:com.llealloo.audiolink",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.poiyomi.thryeditor": {
+      "version": "file:com.poiyomi.thryeditor",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.poiyomi.toon": {
+      "version": "file:com.poiyomi.toon",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.ai.navigation": {
       "version": "1.1.5",
       "depth": 0,
@@ -202,8 +220,8 @@
         "com.unity.nuget.newtonsoft-json": "3.0.2"
       }
     },
-    "com.vrchat.demo-template": {
-      "version": "file:com.vrchat.demo-template",
+    "rip.cuebitt.reflectionemissionbaker": {
+      "version": "file:rip.cuebitt.reflectionemissionbaker",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}
