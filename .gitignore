@@ -71,5 +71,5 @@ Thry/
 Assets/GeneratedTextures/
 Assets/GeneratedTextures.meta
 
-Assets/_LockedShaderCache/
-Assets/_LockedShaderCache.meta
+**/_LockedShaderCache/
+**/_LockedShaderCache.meta
