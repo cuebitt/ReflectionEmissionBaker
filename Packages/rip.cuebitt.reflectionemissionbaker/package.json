@@ -2,7 +2,7 @@
   "name": "rip.cuebitt.reflectionemissionbaker",
   "displayName": "Reflection Emission Baker",
   "version": "1.0.0",
-  "description": "Describe this Package",
+  "description": "Bakes light reflections to emission maps",
   "gitDependencies": {},
   "vpmDependencies": {
     "com.vrchat.avatars": "3.10.5"
