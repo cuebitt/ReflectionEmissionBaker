@@ -2,7 +2,7 @@
 
 Lit avatar props reflecting off of an avatar is a fun effect, but realtime lights are expensive and are usually blocked by other players. This package allows you to "bake" an emission map that replicates this effect with no realtime lights!
 
-<img width="960" height="540" alt="preview" src="https://github.com/user-attachments/assets/a66266b1-6443-45f6-abdb-6eb5800acfec" />
+<img width="1920" height="1080" alt="reb_demo" src="https://github.com/user-attachments/assets/4ed0f67c-8a9c-4945-8c88-d9bd04dc4791" />
 
 There are no realtime lights being used in this clip!
 
