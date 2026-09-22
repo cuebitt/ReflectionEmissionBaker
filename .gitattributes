@@ -1,0 +1,2 @@
+# Exclude web interface from linguist language list
+Website/ linguist-vendored
