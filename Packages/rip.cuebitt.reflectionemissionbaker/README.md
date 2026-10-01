@@ -1,6 +1,6 @@
 # Reflection Emission Baker
 
-If you stick glowsticks in a jacket pocket, the jacket should pick up some of that light. This bakes that kind of fake bounce light into an emission mask texture, so you get the glow with no realtime lights. By Cuebitt.
+Reflection Emission Baker bakes realtime light reflections to an emission mask so you get the glow with no realtime lights. By Cuebitt!
 
 ## Usage
 
