@@ -8,19 +8,15 @@ namespace Cuebitt.ReflectionEmissionBaker.Editor
 {
     public partial class ReflectionEmissionBaker : EditorWindow
     {
-        // what to bake onto
         private GameObject _targetMeshObject;
         private string[] _materialNames = Array.Empty<string>();
         private int _selectedMaterialIndex;
 
-        // light emitters picked in the ui
         private readonly List<GameObject> _lightEmitterObjects = new();
 
-        // bake settings
         private float _lightIntensity = 1.5f;
         private float _lightRadius = 0.1f;
 
-        // preview stuff, cleaned up when you toggle off or close
         private bool _previewEnabled;
         private readonly List<Light> _previewLights = new();
         private readonly List<Light> _dimmedLights = new();
@@ -28,7 +24,6 @@ namespace Cuebitt.ReflectionEmissionBaker.Editor
         private float _savedAmbientIntensity;
         private bool _sceneDimmed;
 
-        // output
         private int _textureResolution = 512;
         private int _dilationIterations = 4;
         private string _savePath = "Assets/GeneratedTextures/EmissionMask.png";
@@ -57,22 +52,27 @@ namespace Cuebitt.ReflectionEmissionBaker.Editor
             _previewEnabled = false;
         }
 
-        // draws the falloff rings in scene view, same centers the bake uses
-        private void DrawLightRadiusGizmos(SceneView view)
+        private void ForEachEmitterRenderer(Action<Renderer> visit)
         {
-            if (_lightEmitterObjects == null || _lightRadius <= 0f) return;
-            Handles.color = new Color(1f, 0.9f, 0.3f);
             foreach (var emitter in _lightEmitterObjects)
             {
                 if (emitter == null) continue;
                 foreach (var r in emitter.GetComponentsInChildren<Renderer>())
-                {
-                    var c = r.bounds.center;
-                    Handles.DrawWireDisc(c, Vector3.up, _lightRadius);
-                    Handles.DrawWireDisc(c, Vector3.right, _lightRadius);
-                    Handles.DrawWireDisc(c, Vector3.forward, _lightRadius);
-                }
+                    visit(r);
             }
+        }
+
+        private void DrawLightRadiusGizmos(SceneView view)
+        {
+            if (_lightEmitterObjects == null || _lightRadius <= 0f) return;
+            Handles.color = new Color(1f, 0.9f, 0.3f);
+            ForEachEmitterRenderer(r =>
+            {
+                var c = r.bounds.center;
+                Handles.DrawWireDisc(c, Vector3.up, _lightRadius);
+                Handles.DrawWireDisc(c, Vector3.right, _lightRadius);
+                Handles.DrawWireDisc(c, Vector3.forward, _lightRadius);
+            });
         }
 
         private void SetPreview(bool enabled)
@@ -91,7 +91,6 @@ namespace Cuebitt.ReflectionEmissionBaker.Editor
             }
         }
 
-        // kills scene lights + ambient so preview reads clearly, restores on toggle off
         private void DimSceneForPreview()
         {
             if (_sceneDimmed) return;
@@ -130,40 +129,29 @@ namespace Cuebitt.ReflectionEmissionBaker.Editor
             _sceneDimmed = false;
         }
 
-        // same spot as the bake uses, hidden so it never touches the scene file
         private void SpawnPreviewLights()
         {
             ClearPreviewLights();
 
-            foreach (var emitter in _lightEmitterObjects)
+            ForEachEmitterRenderer(r =>
             {
-                if (emitter == null) continue;
+                var go = new GameObject("_PreviewBakeLight") { hideFlags = HideFlags.HideAndDontSave };
+                go.transform.position = r.bounds.center;
 
-                foreach (var r in emitter.GetComponentsInChildren<Renderer>())
-                {
-                    var go = new GameObject("_PreviewBakeLight") { hideFlags = HideFlags.HideAndDontSave };
-                    go.transform.position = r.bounds.center;
+                var light = go.AddComponent<Light>();
+                light.type = LightType.Point;
+                light.color = Color.white;
+                light.intensity = _lightIntensity;
+                light.range = _lightRadius;
 
-                    var light = go.AddComponent<Light>();
-                    light.type = LightType.Point;
-                    light.color = Color.white;
-                    light.intensity = _lightIntensity;
-                    light.range = _lightRadius;
-
-                    _previewLights.Add(light);
-                }
-            }
+                _previewLights.Add(light);
+            });
         }
 
-        // just pushes slider values into existing lights, respawns only when emitters changed
         private void UpdatePreviewLights()
         {
             var count = 0;
-            foreach (var emitter in _lightEmitterObjects)
-            {
-                if (emitter == null) continue;
-                count += emitter.GetComponentsInChildren<Renderer>().Length;
-            }
+            ForEachEmitterRenderer(_ => count++);
 
             if (count != _previewLights.Count)
             {
@@ -191,7 +179,6 @@ namespace Cuebitt.ReflectionEmissionBaker.Editor
 
         private void OnGUI()
         {
-            // header
             GUILayout.Label("Emission Baker", new GUIStyle(EditorStyles.boldLabel)
             {
                 fontSize = 20,
@@ -220,24 +207,22 @@ namespace Cuebitt.ReflectionEmissionBaker.Editor
             DrawOutputSection();
             EditorGUILayout.Space();
 
-            // deferred so asset dialogs dont break layout
+            // asset dialogs break GUI layout if opened mid-OnGUI
             if (GUILayout.Button("Bake Emission Mask", GUILayout.Height(40)))
                 EditorApplication.delayCall += BakeEmissionMask;
 
             EditorGUILayout.EndVertical();
-            
+
             EditorGUILayout.EndScrollView();
 
             if (GUI.changed)
             {
-                // keep radius rings in sync while dragging sliders
                 SceneView.RepaintAll();
 
                 if (_previewEnabled)
                     UpdatePreviewLights();
             }
 
-            // fit window height once on open, then let user resize freely
             if (!_hasResized && Event.current.type == EventType.Repaint)
             {
                 var height = GUILayoutUtility.GetLastRect().yMax + 10;
@@ -245,7 +230,6 @@ namespace Cuebitt.ReflectionEmissionBaker.Editor
                 maxSize = new Vector2(maxSize.x, height);
 
                 _hasResized = true;
-                // Unlock max size so the user can resize freely after initial fit
                 maxSize = new Vector2(600, 4000);
             }
         }
@@ -255,8 +239,6 @@ namespace Cuebitt.ReflectionEmissionBaker.Editor
         {
             GetWindow<ReflectionEmissionBaker>("[TT] Reflection Emission Baker");
         }
-
-        #region GUI Sections
 
         private void DrawTargetSection()
         {
@@ -355,8 +337,5 @@ namespace Cuebitt.ReflectionEmissionBaker.Editor
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndVertical();
         }
-
-        #endregion
-
     }
 }

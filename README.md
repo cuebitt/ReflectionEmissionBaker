@@ -12,9 +12,11 @@ An editor window drops a temporary point light at the center of each light emitt
 
 For each covered texel it interpolates world position with barycentric coordinates and accumulates falloff squared times intensity per light, keeping the brightest value. The result is dilated outward to close UV seam gaps, written out as a PNG to a unique asset path, and selected in the Project window.
 
-Nothing is modified on your materials. You plug the baked PNG into your shader's emission mask yourself (tested with Poiyomi Toon).
+(In simpler terms, the editor window places temporary lights, figures out which parts of the selected material's textures are affected by the temporary lights, and uses this information to generate an emission mask texture)
 
-For SkinnedMeshRenderers the current pose is frozen with `BakeMesh`, so pose the avatar before you bake.
+The baking process does not modify your avatar's model or materials. The generated PNG is written to a new asset path, and you can use it with a shader that supports emission masks (tested with Poiyomi Toon).
+
+For SkinnedMeshRenderers the current pose is frozen with `BakeMesh`, so pose the avatar before you bake. This is also temporary, your avatar's SkinnedMeshRenderer is not modified.
 
 ## Requirements
 
@@ -22,26 +24,21 @@ For SkinnedMeshRenderers the current pose is frozen with `BakeMesh`, so pose the
 - Target mesh with clean UVs on channel 0: fully unwrapped, no overlapping islands, no degenerate triangles. Bad UVs bake black or smeared.
 - Target with a `SkinnedMeshRenderer` or `MeshFilter`. Keep scale at 1,1,1. Near-zero scale collapses everything to a point and bakes black.
 
-## Add the package to Creator Companion
-
-Releases publish a VPM listing from this repo, so install and updates flow through VCC:
-
-1. Copy the listing URL for this repo.
-2. Open the Creator Companion, go to Settings, then the Packages tab.
-3. Press Add Repository and paste the URL. Confirm and close Settings.
-4. Open your avatar project, press Manage Project, find Reflection Emission Baker in the list, and press the plus to install.
-
 ## Usage
 
-1. Put your glow props where you want them and build the target mesh like you normally would.
-2. Open Tools > Cuebitt > Reflection Emission Baker and drag the receiving GameObject into Target Mesh. Pick the Target Material slot. Only that slot is baked.
-3. Add one GameObject per glow prop under Light Emitting Objects. Each `Renderer` under it becomes a point light at its bounds center.
-4. Set Intensity (0.1 to 5, default 1.5) for brightness and Light Radius (0.1 to 10, default 0.1) for falloff in world units. Yellow rings in the Scene view show the radius. If the closest surface is outside the radius you get a warning and a black bake, so bump the radius up.
-5. Turn on Preview to dim the scene lights and ambient and spawn hidden preview lights at the same positions the bake uses. Turn it off to restore.
-6. Pick a Resolution (256, 512, 1024, 2048), a Dilation (0 to 16, default 4) to bleed lit texels into black neighbors around seams, and a Save Path (default `Assets/GeneratedTextures/EmissionMask.png`). Old bakes are never overwritten, a unique path is generated each time.
-7. Press Bake Emission Mask and plug the PNG into your material's Emission Mask slot.
+To download Reflection Emission Baker and add it to an Avatar project, add my VPM repository to VCC or ALCOM:
 
-A sample glowstick prop ships in `Runtime/Glowsticks/`: mesh, BaseColor, Normal, MetallicSmoothness and Emission textures, plus a Poiyomi `Glowstick.mat` wired to use a baked mask.
+https://cuebitt.github.io/vpm/
+
+1. Add your glowing props to your avatar's hierarchy and position them in their desired location.
+2. Open Tools > Cuebitt > Reflection Emission Baker and drag the receiving GameObject into Target Mesh. Pick the Target Material slot. Only that slot is baked.
+3. Add each glowing prop GameObject to the list in the Reflection Emission Baker window. Each `Renderer` under it temporarily becomes a point light at its bounds center.
+4. Set Intensity (0.1 to 5, default 1.5) for brightness and Light Radius (0.1 to 10, default 0.1) for falloff in world units. Yellow wireframe gizmos appear in the scene view to help you set these settings.
+5. Turn on Preview to dim the scene and spawn the temporary lights. The generated emission mask will look similarly to the light reflections in the preview.
+6. Pick a Resolution (256, 512, 1024, 2048), a Dilation (0 to 16, default 4) to bleed lit texels into black neighbors around seams, and a Save Path (default `Assets/GeneratedTextures/EmissionMask.png`).
+7. Press `Bake Emission Mask` and plug the PNG into your material's Emission Mask slot.
+
+A sample glowing prop is located at `Runtime/Glowsticks/`. You can use this to test out Reflection Emission Baker, and you may also freely include this on any avatar you make.
 
 ## License
 
